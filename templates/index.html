@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TechStax Technical Round</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #38bbb0;
+        }
+
+        #header {
+            background-color: #000000;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        #data-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #b9f8f5;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.342);
+        }
+
+        .data-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #0e493f;
+            padding-bottom: 10px;
+        }
+
+        .data-item p {
+            margin: 5px 0;
+        }
+
+        .data-item p strong {
+            font-weight: bold;
+        }
+
+        .data-item hr {
+            margin-top: 10px;
+            border: none;
+            border-top: 1px solid #0e493f;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <h1>GitHub Actions</h1>
+    </div>
+    <div id="data-container"></div>
+    <script>
+        function fetchData() {
+            fetch('/api/data')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('data-container');
+                    container.innerHTML = '';
+                    data.forEach(item => {
+                        const div = document.createElement('div');
+                        div.classList.add('data-item');
+                        let actionText;
+                        if (item.action === 'merge') {
+                            actionText = `"${item.author}" merged branch "${item.from_branch}" to "${item.to_branch}" on ${new Date(item.timestamp).toUTCString()}`;
+                        } else if (item.action === 'push') {
+                            actionText = `"${item.author}" pushed to "${item.to_branch}" on ${new Date(item.timestamp).toUTCString()}`;
+                        } else if (item.action === 'pull_request') {
+                            actionText = `"${item.author}" created a pull request from "${item.from_branch}" to "${item.to_branch}" on ${new Date(item.timestamp).toUTCString()}`;
+                        }
+                        div.innerHTML = `
+                    <p><strong>Action:</strong> ${actionText}</p>
+                    <hr>
+                `;
+                        container.appendChild(div);
+                    });
+                });
+        }
+
+
+        fetchData();
+        setInterval(fetchData, 15000);
+    </script>
+</body>
+
+</html>
