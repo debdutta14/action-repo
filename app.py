@@ -10,7 +10,6 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['TechStax']
 collection = db['WebhookTask']
 
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -30,7 +29,8 @@ def api_gh_message():
                 'action': event_type,
                 'from_branch': payload.get('ref', '').split('/')[-1] if event_type == 'push' else payload.get('pull_request', {}).get('head', {}).get('ref', ''),
                 'to_branch': payload.get('pull_request', {}).get('base', {}).get('ref', '') if event_type == 'pull_request' else payload.get('pull_request', {}).get('base', {}).get('ref', ''),
-                'timestamp': payload.get('head_commit', {}).get('timestamp') if event_type == 'push' else payload.get('created_at') if event_type == 'pull_request' else payload.get('pull_request', {}).get('merged_at', ''),
+                'timestamp': payload.get('pull_request', {}).get('created_at') if event_type == 'pull_request' else payload.get('pull_request', {}).get('merged_at', '')
+
             }
             result = collection.insert_one(action_data)
             print(f"Inserted document with ID: {result.inserted_id}")

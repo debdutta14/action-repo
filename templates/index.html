@@ -75,7 +75,7 @@
                         } else if (item.action === 'push') {
                             actionText = `"${item.author}" pushed to "${item.to_branch}" on ${new Date(item.timestamp).toUTCString()}`;
                         } else if (item.action === 'pull_request') {
-                            actionText = `"${item.author}" created a pull request from "${item.from_branch}" to "${item.to_branch}" on ${new Date(item.timestamp).toUTCString()}`;
+                            actionText = `"${item.author}" created a pull request from "${item.from_branch}" to "${item.to_branch}"`;
                         }
                         div.innerHTML = `
                     <p><strong>Action:</strong> ${actionText}</p>
